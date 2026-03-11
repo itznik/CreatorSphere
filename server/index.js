@@ -2,7 +2,8 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const connectDB = require('./config/db');
-const authRoutes = require('./routes/authRoutes'); // 1. IMPORT THE ROUTES
+const authRoutes = require('./routes/authRoutes');
+const userRoutes = require('./routes/userRoutes');
 
 // Initialize Database Connection
 connectDB();
@@ -24,6 +25,7 @@ app.get('/api/health', (req, res) => {
 
 // 2. REGISTER THE ROUTES (Must be before app.listen)
 app.use('/api/auth', authRoutes);
+app.use('/api/users', userRoutes);
 
 const PORT = process.env.PORT || 5000;
 
