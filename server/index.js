@@ -1,3 +1,4 @@
+const authRoutes = require('./routes/authRoutes');
 require('dotenv').config(); // Load environment variables first
 const express = require('express');
 const cors = require('cors');
@@ -20,6 +21,8 @@ app.use(express.urlencoded({ extended: true }));
 app.get('/api/health', (req, res) => {
   res.status(200).json({ status: 'Backend and Database are locked in!' });
 });
+// Auth Route
+app.use('/api/auth', authRoutes);
 
 const PORT = process.env.PORT || 5000;
 
