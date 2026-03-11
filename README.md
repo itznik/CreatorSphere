@@ -1,2 +1,0 @@
-# CreatorSphere
-Creator Sphere
