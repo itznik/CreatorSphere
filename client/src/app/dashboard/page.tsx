@@ -12,22 +12,27 @@ export default function DashboardPage() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const fetchUserProfile = async () => {
+        const fetchUserProfile = async () => {
       try {
-        // Fetch the profile data. The browser automatically sends the HttpOnly cookie!
         const response = await fetch('/api/users/me', {
           method: 'GET',
-          // 'include' ensures the cookie is sent along with the request
-          credentials: 'include', 
         });
+
+        // 🛡️ THE SAFETY NET: Check if the response is HTML (404 page)
+        const contentType = response.headers.get("content-type");
+        if (!contentType || !contentType.includes("application/json")) {
+          const textError = await response.text();
+          console.error("Backend sent HTML instead of JSON. Route missing?", textError);
+          // Don't crash, just kick them back to login
+          router.push('/login');
+          return;
+        }
 
         const data = await response.json();
 
         if (response.ok && data.success) {
-          // If successful, save the user data to state
           setUser(data.user);
         } else {
-          // If the token is missing or expired, kick them to the login page
           router.push('/login');
         }
       } catch (error) {
@@ -37,6 +42,7 @@ export default function DashboardPage() {
         setIsLoading(false);
       }
     };
+
 
     fetchUserProfile();
   }, [router]);
