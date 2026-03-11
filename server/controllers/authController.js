@@ -1,5 +1,11 @@
 const User = require('../models/Users');
 const jwt = require('jsonwebtoken');
+const cookieOptions = {
+  httpOnly: true, // Invisible to JavaScript (Protects against XSS)
+  secure: process.env.NODE_ENV !== 'development', // HTTPS only in production (Protects against MITM)
+  sameSite: 'strict', // Protects against CSRF attacks
+  maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days in milliseconds
+};
 
 // @desc    Register a new user
 // @route   POST /api/auth/register
@@ -27,11 +33,14 @@ const registerUser = async (req, res) => {
 
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
 
-    res.status(201).json({
-      success: true,
-      token,
-      user: { id: user._id, username: user.username, email: user.email }
-    });
+    res.status(200).cookie('jwt', token, cookieOptions).json({
+  success: true,
+  user: {
+    id: user._id,
+    username: user.username,
+    email: user.email,
+  }
+});
   } catch (error) {
     console.error('Registration Error:', error);
     res.status(500).json({ success: false, message: 'Server Error during registration' });
@@ -61,11 +70,14 @@ const loginUser = async (req, res) => {
 
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
 
-    res.status(200).json({
-      success: true,
-      token,
-      user: { id: user._id, username: user.username, email: user.email }
-    });
+    res.status(200).cookie('jwt', token, cookieOptions).json({
+  success: true,
+  user: {
+    id: user._id,
+    username: user.username,
+    email: user.email,
+  }
+});
   } catch (error) {
     console.error('Login Error:', error);
     res.status(500).json({ success: false, message: 'Server Error during login' });
