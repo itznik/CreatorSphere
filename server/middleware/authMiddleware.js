@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 
 const protect = async (req, res, next) => {
-  // Read the token directly from the secure HttpOnly cookie
+  // Read the token directly from the cookie parsed by cookie-parser
   let token = req.cookies.jwt;
 
   if (token) {
