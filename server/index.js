@@ -1,27 +1,28 @@
-const authRoutes = require('./routes/authRoutes');
-require('dotenv').config(); // Load environment variables first
+require('dotenv').config(); 
 const express = require('express');
 const cors = require('cors');
 const connectDB = require('./config/db');
+const authRoutes = require('./routes/authRoutes'); // 1. IMPORT THE ROUTES
 
 // Initialize Database Connection
 connectDB();
 
 const app = express();
 
-// Production-ready Middleware
+// Middleware
 app.use(cors({
   origin: process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : 'your_production_domain',
-  credentials: true // Crucial for passing secure cookies later
+  credentials: true 
 }));
-app.use(express.json()); // Allows us to parse JSON bodies in POST requests
+app.use(express.json()); 
 app.use(express.urlencoded({ extended: true }));
 
 // Health Check Route
 app.get('/api/health', (req, res) => {
   res.status(200).json({ status: 'Backend and Database are locked in!' });
 });
-// Auth Route
+
+// 2. REGISTER THE ROUTES (Must be before app.listen)
 app.use('/api/auth', authRoutes);
 
 const PORT = process.env.PORT || 5000;
