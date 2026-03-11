@@ -14,10 +14,16 @@ const UserSchema = new mongoose.Schema(
   { timestamps: true } // Automatically manages createdAt and updatedAt
 );
 
-// Pre-save hook: This runs automatically right before saving to MongoDB
-UserSchema.pre('save', async function (next) {
+// Modern Pre-save hook (No 'next' callback needed)
+UserSchema.pre('save', async function () {
   // If the password hasn't been modified, skip hashing
-  if (!this.isModified('passwordHash')) return next();
+  if (!this.isModified('passwordHash')) return;
+
+  // Generate a secure salt and hash the plaintext password
+  const salt = await bcrypt.genSalt(10);
+  this.passwordHash = await bcrypt.hash(this.passwordHash, salt);
+});
+
 
   try {
     // Generate a secure salt and hash the plaintext password
