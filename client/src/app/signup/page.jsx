@@ -43,7 +43,7 @@ export default function SignUpPage() {
 
     try {
       // 4. API Call to our Express Backend
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/register`, {
+      const response = await fetch('/api/auth/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
