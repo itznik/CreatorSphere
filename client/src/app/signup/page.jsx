@@ -41,13 +41,10 @@ export default function SignUpPage() {
       return;
     }
 
-    try {
-      // 4. API Call to our Express Backend
+        try {
       const response = await fetch('/api/auth/register', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           firstName: formData.firstName,
           lastName: formData.lastName,
@@ -57,25 +54,29 @@ export default function SignUpPage() {
         }),
       });
 
+      // CHECK: Is the response actually JSON?
+      const contentType = response.headers.get("content-type");
+      if (!contentType || !contentType.includes("application/json")) {
+        // If it's HTML, read it as text so we can see the real error
+        const textError = await response.text();
+        console.error("HTML Error Received:", textError);
+        throw new Error("Server returned HTML. Check the browser console!");
+      }
+
       const data = await response.json();
 
       if (!response.ok) {
-        // If backend throws an error (e.g., user exists), display it
-        throw new Error(data.message || 'Something went wrong during registration');
+        throw new Error(data.message || 'Something went wrong');
       }
 
-      // 5. Success Handling
-      // In a real app, you'd save the token to a secure cookie or context here
       console.log('Registration successful! Token:', data.token);
-      
-      // Redirect to the dashboard (we will build this later)
       router.push('/dashboard'); 
 
     } catch (err) {
       setError(err.message);
     } finally {
       setIsLoading(false);
-    }
+        }
   };
 
   return (
