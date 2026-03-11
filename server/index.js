@@ -4,6 +4,7 @@ const cors = require('cors');
 const connectDB = require('./config/db');
 const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
+const cookieParser = require('cookie-parser');
 
 // Initialize Database Connection
 connectDB();
@@ -15,7 +16,8 @@ app.use(cors({
   origin: process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : 'your_production_domain',
   credentials: true 
 }));
-app.use(express.json()); 
+app.use(express.json());
+app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 
 // Health Check Route
