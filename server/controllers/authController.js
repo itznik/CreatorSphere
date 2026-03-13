@@ -69,4 +69,19 @@ const loginUser = async (req, res) => {
   }
 };
 
-module.exports = { registerUser, loginUser };
+// @desc    Log user out / clear cookie
+// @route   POST /api/auth/logout
+// @access  Public
+const logoutUser = (req, res) => {
+  res.cookie('jwt', '', {
+    httpOnly: true,
+    expires: new Date(0), // Sets expiration to Jan 1, 1970
+    sameSite: 'strict',
+    secure: process.env.NODE_ENV !== 'development',
+  });
+  
+  res.status(200).json({ success: true, message: 'Logged out successfully' });
+};
+
+// Update exports to include logoutUser
+module.exports = { registerUser, loginUser, logoutUser };
