@@ -6,6 +6,21 @@ import { LayoutDashboard, Users, Activity, Loader2, LogOut } from 'lucide-react'
 
 export default function DashboardPage() {
   const router = useRouter();
+  const handleLogout = async () => {
+  try {
+    const response = await fetch('/api/users/logout', { // Or /api/auth/logout based on your route
+      method: 'POST',
+    });
+
+    if (response.ok) {
+      // Clear the user state and send them back to login
+      setUser(null);
+      router.push('/login');
+    }
+  } catch (error) {
+    console.error("Logout failed:", error);
+  }
+};
   
   // State to hold the user's data and the loading status
   const [user, setUser] = useState(null);
@@ -73,7 +88,7 @@ export default function DashboardPage() {
           </div>
           
           {/* Placeholder for future logout button */}
-          <button className="flex items-center gap-2 text-sm text-slate-400 hover:text-white transition-colors bg-slate-900 border border-slate-800 px-4 py-2 rounded-lg">
+          <button onClick={handleLogout} className="flex items-center gap-2 text-sm text-slate-400 hover:text-white transition-colors bg-slate-900 border border-slate-800 px-4 py-2 rounded-lg">
             <LogOut className="w-4 h-4" />
             Sign Out
           </button>
