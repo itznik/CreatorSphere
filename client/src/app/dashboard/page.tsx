@@ -6,7 +6,7 @@ import {
   LayoutDashboard, Users, Activity, Loader2, 
   LogOut, Plus, Instagram, Youtube, Twitter, Globe 
 } from 'lucide-react';
-import ConnectPlatformModal from '@/components/ConnectPlatformModal';
+import ConnectPlatformModal from '../../components/ConnectPlatformModal';
 
 export default function DashboardPage() {
   const router = useRouter();
